@@ -5,6 +5,7 @@ local M = {
             do_at_each_visual_mode = 'M',
         },
     },
+    last_macro = nil,
 }
 
 local function clean_macro(macro)
@@ -37,9 +38,16 @@ function M.setup_mappings()
 
             local macro = vim.fn.input('Macro: ')
             if macro == '' then
-                return
+                if M.last_macro == nil then
+                    vim.notify('No macro provided...')
+                    return
+                end
+                vim.notify('No macro provided, using last macro.')
+                macro = M.last_macro
+            else
+                macro = clean_macro(macro)
+                M.last_macro = macro
             end
-            macro = clean_macro(macro)
 
             if mmode == 'n' then
                 -- Normal mode
@@ -95,8 +103,6 @@ end
 function M.do_at_each_match(from_line, to_line, regex, macro)
     -- Create namespace for our extmarks
     local ns_id = vim.api.nvim_create_namespace('do_at_each_match')
-
-    print(from_line, to_line)
     
     -- Go to first line of range
     vim.api.nvim_win_set_cursor(0, {from_line, 0})
