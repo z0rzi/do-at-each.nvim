@@ -10,7 +10,7 @@ local M = {
 
 local function clean_macro(macro)
     -- let clean_macro = substitute(substitute(a:macro, '<>', '\<ESC>', 'g'), '<[a-zA-Z-]\+>\|"', '\\&', 'gi')
-    return macro:gsub('<>', '<ESC>'):gsub('<[a-zA-Z-]+>', function(s) return '\\'..s end)
+    return macro:gsub('<>', '<ESC>'):gsub('<[a-zA-Z-]+>', function(s) return '\\'..s end):gsub('"', '\\"')
 end
 
 function M.setup_mappings()
